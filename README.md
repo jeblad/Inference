@@ -59,7 +59,7 @@ All methods with names on the _get*_-form will return the selection without chan
 
 A user available method _query_ will use an [xpath-like](https://en.wikipedia.org/wiki/XQuery#XPath) or [selector-like](https://en.wikipedia.org/wiki/Cascading_Style_Sheets#Selector) query-style to extract entries from the requested entities at the repository.
 
-One important point to notice; no fetch of new entities will be done unless the query explicitly say so, and it will only be done in a forward fashion. This is to avoid unwanted loops, which will otherwise empty the load budget fast. In user space a fetch is written as a forward slash, and filtering operations are put inside square brackets.
+One important point to notice; no fetch of new entities will be done unless the query explicitly say so, and it will only be done in a strictly forward fashion as parsing progresses. The parser will not do backtracking. This is to avoid unwanted loops, which will otherwise empty the load budget fast. In user space a fetch is written as a forward slash, and selectors are put inside square brackets.
 
 Given a user call like
 
@@ -94,6 +94,8 @@ If there are no specific root entity then the current one can be given, or simpl
 ```
 
 ### Selectors
+
+Selectors are operators that reduce the set of statements. Any statements kept must satisfy the selector. In particular, a selector will never grow a larger set.
 
 Property is to the left, compared value to the right.
 
