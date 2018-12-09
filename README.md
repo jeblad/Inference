@@ -1,6 +1,6 @@
 # Inference
 
-This extension for Mediawiki adds a simple inference engine to query and build sets of entities from Wikibase.
+This extension for Mediawiki adds a simple inference engine to query and build sets of entities from a Wikibase repository.
 
 It is an alternative way to query the relations between entities, where selectors are used to manipulate an internal set of selected claims, and selectors can be chained to form more complex propositions. In a final step parts the internal structure of the claims or even the entities can be returned. The final step will involve an implicit filter operation, so nil will not be returned if possible. The implicit filtering will not change the internal selection, thus further processing of the selection is possible.
 
