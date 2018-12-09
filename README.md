@@ -59,24 +59,38 @@ All methods with names on the _get*_-form will return the selection without chan
 
 A user available method _query_ will use an [xpath-like](https://en.wikipedia.org/wiki/XQuery#XPath) or [selector-like](https://en.wikipedia.org/wiki/Cascading_Style_Sheets#Selector) query-style to extract entries from the requested entities at the repository.
 
+One important point to notice; no fetch of new entities will be done unless the query explicitly say so, and it will only be done in a forward fashion. This is to avoid unwanted loops, which will otherwise empty the load budget fast. In user space a fetch is written as a forward slash, and filtering operations are put inside square brackets.
+
 Given a user call like
 
 ```mediawiki
-{{#invoke:Inference|query|Q20 [P31]/[rank preferred]/}}
+{{#invoke:Inference|query|Q20[P31][rank preferred]/}}
 ```
 
 then this will be rewritten into a call like
 
 ```lua
 local inference = require 'Module:Inference'
-local result = inference( 'Q20 [P31]/[rank preferred]/' ):plain()
+local result = inference( 'Q20[P31][rank preferred]/' )
+  :plain()
 ```
 
-If there are no specific root entity then the current one can be given, or simply implicitly used
+which is roughly similar to
+
+```lua
+local inference = require 'Module:Inference'
+local result = inference( 'Q20 [P31] [rank preferred]/' ).create( 'Q20' )
+  :property( 'P31' )
+  :rank( 'preferred' )
+  :fetch()
+  :plain()
+```
+
+If there are no specific root entity then the current one can be given, or simply implicitly used (could be dropped)
 
 ```mediawiki
-{{#invoke:Inference|query|. [P31]/[rank preferred]/}}
-{{#invoke:Inference|query|[P31]/[rank preferred]/}}
+{{#invoke:Inference|query|.[P31][rank preferred]/}}
+{{#invoke:Inference|query|[P31][rank preferred]/}} -- could be dropped
 ```
 
 ### Selectors
